@@ -1,0 +1,2 @@
+# maxicop
+Übungen für BIM
