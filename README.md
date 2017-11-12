@@ -11,3 +11,11 @@
 **strcat(s1,s2,s3)** zum Kombinieren von mehreren Strings
 
 **dna2rna(dna)** wandelt DNA in RNA um
+
+## Links für Aufgabe 3
+
+https://www.youtube.com/watch?v=fJzGGHBRwFc&t=169s
+
+https://www.youtube.com/watch?v=yR_heZ4n4Gc
+
+https://en.wikipedia.org/wiki/Restriction_map
