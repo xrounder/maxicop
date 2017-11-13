@@ -12,6 +12,9 @@
 
 **dna2rna(dna)** wandelt DNA in RNA um
 
+## Links für Aufgabe 2
+https://www.youtube.com/watch?v=8LusJS5-AGo
+
 ## Links für Aufgabe 3
 
 https://www.youtube.com/watch?v=fJzGGHBRwFc&t=169s
