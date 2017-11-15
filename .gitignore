@@ -22,7 +22,7 @@
 hs_err_pid*
 
 # IntelliJ
-.idea*
+.idea/*
 maxicop.iml
 
 #project related
