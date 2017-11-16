@@ -1,6 +1,7 @@
 package uebung1.aufgabe3;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.List;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,6 +12,11 @@ import static org.apache.commons.collections4.CollectionUtils.permutations;
  */
 public class DoubleDigestProblem{
     //<editor-fold desc="Felder und Listen">
+    /**
+     * Scanner für Benutzereingaben an der Tastatur
+     */
+    public static Scanner in = new Scanner(System.in);
+
     /**
      * Liste von Fragmentlaengen, welche anhand von Enzym A entstanden sind
      */
@@ -32,20 +38,22 @@ public class DoubleDigestProblem{
     private static int strangLaenge;
 
     /**
-     * Anzahl aller moeglichen Loesungen
+     * Listen fuer gueltige Fragmentreihenfolgen und Schnittpositionen
      */
-    private static int anzahlMoeglicherLoesungen;
+    private static ArrayList<List<Integer>> gueltigeKombisA = new ArrayList<List<Integer>>();
+    private static ArrayList<List<Integer>> gueltigeKombisB = new ArrayList<List<Integer>>();
+    private static  ArrayList<List<Integer>> gueltigeSchnittpositionenA = new ArrayList<List<Integer>>(); // Vielleicht nicht noetig
+    private static ArrayList<List<Integer>> gueltigeSchnittpositionenB = new ArrayList<List<Integer>>(); // Vielleicht nicht noetig
+    private static ArrayList<List<Integer>> gueltigeSchnittpositionenAB = new ArrayList<List<Integer>>(); // Vielleicht nicht noetig
 
     /**
-     * Anzahl aller gueltigen Loesungen
+     * Listen fuer ungueltige Fragmentreihenfolgen und Schnittpositionen
      */
-    private static int anzahlGueltigerLoesungen;
-
-    /**
-     * Listen fuer gueltige Fragmentreihenfolgen
-     */
-    private static ArrayList<List<Integer>> gueltigeReihenfolgenA = new ArrayList<List<Integer>>();
-    private static ArrayList<List<Integer>> gueltigeReihenfolgenB = new ArrayList<List<Integer>>();
+    private static ArrayList<List<Integer>> ungueltigeKombisA = new ArrayList<List<Integer>>();
+    private static ArrayList<List<Integer>> ungueltigeKombisB = new ArrayList<List<Integer>>();
+    private static ArrayList<List<Integer>> ungueltigeSchnittpositionenA = new ArrayList<List<Integer>>(); // Vielleicht nicht noetig
+    private static ArrayList<List<Integer>> ungueltigeSchnittpositionenB = new ArrayList<List<Integer>>(); // Vielleicht nicht noetig
+    private static ArrayList<List<Integer>> ungueltigeSchnittpositionenAB = new ArrayList<List<Integer>>(); // Vielleicht nicht noetig
     //</editor-fold>
 
     /**
@@ -54,6 +62,7 @@ public class DoubleDigestProblem{
      * @param args Kommandozeilenargumente
      */
     public static void main(String[] args) throws Exception {
+        //sortiereFragmentListen();
         befuelleListen();
 
         if(!pruefeFragmentlaengen()){
@@ -69,10 +78,13 @@ public class DoubleDigestProblem{
         ausgabeFragmentListe(fragmentListeB, "B");
         ausgabeFragmentListe(fragmentListeAB, "AB");
 
-        ausgabeGueltigeFragmentreihenfolgen(gueltigeReihenfolgenA, "A");
-        ausgabeGueltigeFragmentreihenfolgen(gueltigeReihenfolgenB, "B");
+        ausgabeFragmentreihenfolgen(gueltigeKombisA, "A", "gueltig");
+        ausgabeFragmentreihenfolgen(gueltigeKombisB, "B", "gueltig");
 
-        ausgabeAnzahlReihenfolgen();
+        ausgabeFragmentreihenfolgen(ungueltigeKombisA, "A", "ungueltig");
+        ausgabeFragmentreihenfolgen(ungueltigeKombisB, "B", "ungueltig");
+
+        ausgabeAnzahlGueltigerUndUngueltigerKombis();
     }
 
     //<editor-fold desc="Listeniniziierung und -sortierung">
@@ -122,22 +134,38 @@ public class DoubleDigestProblem{
 
     //<editor-fold desc="Methoden, welche das Double Digest Problem loesen">
     /**
-     * Speichert die Schnittpositionen eines Enzyms.
+     * Tragt die Schnittpositionen eines Enzyms ein.
+     * @param schnittpositionen Liste der markierten Schnittpositionen.
+     * @return Liste mit allen Schnittpositionen
+     */
+    public static List<Integer> trageSchnittPositionenEin(int[] schnittpositionen){
+        List<Integer> listeDerSchnittpositionen = new ArrayList<Integer>();
+
+        for(int i = 1; i < strangLaenge+1; i++){
+            if(schnittpositionen[i] == 1){
+                listeDerSchnittpositionen.add(i);
+            }
+        }
+
+        return listeDerSchnittpositionen;
+    }
+
+    /**
+     * Markiert die Schnittpositionen eines Enzyms.
      * @param fragmentListe Fragmentliste mit der die Schnittpositionen ermittelt werden.
      * @return Liste mit allen Schnittpositionen
      */
-    public static List<Integer> speicherSchnittpositionen(List<Integer> fragmentListe) {
-        List<Integer> listeSchnittpositionen = new ArrayList<Integer>();
+    public static int[] markiereSchnittPositionen(List<Integer> fragmentListe) {
+        int[] listeSchnittpositionen = new int[strangLaenge + 1];
 
-        int schnittIndex = 0;
+        int index = 0;
 
-        // Schnittstellen ergeben sich aus der Aufsummierung der Fragmentlaengen
-        for(int fragment : fragmentListe){
-            schnittIndex += fragment;
+        // Schnittstellen ergeben sich aus Fragmentlaengen
+        for (int fragment : fragmentListe) {
+            index += fragment;
 
-            // Das Ende des Strangs ist kein Schnitt
-            if(schnittIndex < strangLaenge){
-                listeSchnittpositionen.add(schnittIndex);
+            if(index < strangLaenge) {
+                listeSchnittpositionen[index] = 1;
             }
         }
 
@@ -147,7 +175,7 @@ public class DoubleDigestProblem{
     /**
      * Prueft, ob zwei Fragmentlisten von AB gleich sind.
      * @param fragmentLaengenAB Liste die auf Gleichheit geprueft werden soll
-     * @return Liefert true wenn beide Listen gleich sind
+     * @return Den Wahrheitswert
      */
     public static boolean pruefeABFragmentlistenAufGleicheit(List<Integer> fragmentLaengenAB){
         boolean sindGleich = false;
@@ -162,53 +190,51 @@ public class DoubleDigestProblem{
     }
 
     /**
-     * Auswertung des Double Digest Problems
+     * AUswertung des Double Digest
      * @param permutationenA Liste aller moeglichen Fragmentreihenfolgen von Enzym A
      * @param permutationenB Liste aller moeglichen Fragmentreihenfolgen von Enzym B
      */
     public static void auswertungDoubleDigest(Collection<List<Integer>> permutationenA, Collection<List<Integer>> permutationenB){
         for(List<Integer> permutationVonA : permutationenA){
             for(List<Integer> permutationVonB : permutationenB){
-                // Schnittpositionen koennen schonmal in AB uebernommen werden
-                List<Integer> schnittpositionenAB = speicherSchnittpositionen(permutationVonA);
-                List<Integer> schnittpositionenB = speicherSchnittpositionen(permutationVonB);
+                int[] schnittpositionenA = markiereSchnittPositionen(permutationVonA);
+                int[] schnittpositionenB = markiereSchnittPositionen(permutationVonB);
+                int[] schnittpositionenAB = new int[strangLaenge+1];
 
-                // Schnittpositionen von B zu AB hinzufuegen
-                for(int schnittposition : schnittpositionenB){
-                    if(!schnittpositionenAB.contains(schnittposition)){
-                        schnittpositionenAB.add(schnittposition);
+                // Bestimmt Schnittpositionen mit Enzymen A und B - AB
+                for(int i = 1; i < strangLaenge+1; i++){
+                    if(schnittpositionenA[i] == 1 || schnittpositionenB[i] == 1){
+                        schnittpositionenAB[i] = 1;
                     }
                 }
 
-                Collections.sort(schnittpositionenAB);
+                List<Integer> listeDerSchnittpositionenA = trageSchnittPositionenEin(schnittpositionenA);
+                List<Integer> listeDerSchnittpositionenB = trageSchnittPositionenEin(schnittpositionenB);
+                List<Integer> listeDerSchnittpositionenAB = trageSchnittPositionenEin(schnittpositionenAB);
 
                 List<Integer> fragmentLaengenAB = new ArrayList<Integer>();
+                int fragmentLaengeAB = 0;
+                for(int i = 1; i < strangLaenge+1; i++){
+                    fragmentLaengeAB++;
 
-                fragmentLaengenAB.add(schnittpositionenAB.get(0));
-
-                // Ermittelt Fragmentlaengen von AB aus den Schnittpositionen
-                for(int i = 0; i < schnittpositionenAB.size()-1; i++){
-                    int fragmentLaengeAB = schnittpositionenAB.get(i+1) - schnittpositionenAB.get(i);
-
-                    fragmentLaengenAB.add(fragmentLaengeAB);
+                    if(schnittpositionenAB[i] == 1 || i == strangLaenge){
+                        fragmentLaengenAB.add(fragmentLaengeAB);
+                        fragmentLaengeAB = 0;
+                    }
                 }
 
-                fragmentLaengenAB.add(strangLaenge - schnittpositionenAB.get(schnittpositionenAB.size()-1));
-
-                anzahlMoeglicherLoesungen++;
-
-                // Fragment Liste von AB muss mit der gegebenen Fragmentliste von AB uebereinstimmen
-                // damit die Reihenfolgen von A und B fuer gueltig erklaert werden koennen
                 if(pruefeABFragmentlistenAufGleicheit(fragmentLaengenAB)){
-                    anzahlGueltigerLoesungen++;
-
-                    if(!gueltigeReihenfolgenA.contains(permutationVonA)){
-                        gueltigeReihenfolgenA.add(permutationVonA);
-                    }
-
-                    if(!gueltigeReihenfolgenB.contains(permutationVonB)){
-                        gueltigeReihenfolgenB.add(permutationVonB);
-                    }
+                    gueltigeKombisA.add(permutationVonA);
+                    gueltigeKombisB.add(permutationVonB);
+                    gueltigeSchnittpositionenA.add(listeDerSchnittpositionenA);
+                    gueltigeSchnittpositionenB.add(listeDerSchnittpositionenB);
+                    gueltigeSchnittpositionenAB.add(listeDerSchnittpositionenAB);
+                } else {
+                    ungueltigeKombisA.add(permutationVonA);
+                    ungueltigeKombisB.add(permutationVonB);
+                    ungueltigeSchnittpositionenA.add(listeDerSchnittpositionenA);
+                    ungueltigeSchnittpositionenB.add(listeDerSchnittpositionenB);
+                    ungueltigeSchnittpositionenAB.add(listeDerSchnittpositionenAB);
                 }
             }
         }
@@ -224,43 +250,177 @@ public class DoubleDigestProblem{
      */
     public static void ausgabeFragmentListe(List<Integer> fragmentListe, String listenName){
         System.out.print("\nFragmente von " + listenName + ": (");
-
-        String ausgabe = "";
         for(int fragment : fragmentListe) {
-            ausgabe += fragment + ", ";
+            System.out.print(fragment + ", ");
         }
-
-        System.out.print(ausgabe.substring(0, ausgabe.length() - 2) + ")");
+        System.out.print(")");
     }
 
     /**
-     * Gibt alle gueltige Reihenfolgen der Fragmentlaengen einer Liste aus
+     * Gibt Reihenfolgen der Fragmentlaengen einer Liste aus
      * @param fragmentListen Liste von Fragmentlisten
      * @param listenName Name der Liste
+     * @param listenArt Gibt an ob es eine Liste gueltiger oder ungueltiger Reihenfolgen ist
      */
-    public static void ausgabeGueltigeFragmentreihenfolgen(ArrayList<List<Integer>> fragmentListen, String listenName){
-        System.out.print("\n\nAnzahl gueltiger Fragment-Reihenfolgen fuer " + listenName + ": " + fragmentListen.size());
-        String ausgabe;
+    public static void ausgabeFragmentreihenfolgen(ArrayList<List<Integer>> fragmentListen, String listenName, String listenArt){
+        System.out.print("\n\nAnzahl " + listenArt + "er Fragment-Reihenfolgen fuer " + listenName + ": " + fragmentListen.size());
         int nummerReihenfolge = 1;
         for(List<Integer> fragmentreihe : fragmentListen){
             System.out.print("\n" + nummerReihenfolge + ". Fragment-Reihenfolge " + listenName + " = (");
-            ausgabe = "";
             for(int fragment : fragmentreihe) {
-                ausgabe += fragment + ", ";
+                System.out.print(fragment + ", ");
             }
-            System.out.print(ausgabe.substring(0, ausgabe.length() - 2) + ").");
+            System.out.print(").");
 
             nummerReihenfolge++;
         }
     }
 
     /**
-     * Gibt die Anzahl aller moeglichen, gueltigen und ungueltigen Reihenfolgen aus
+     * Gibt die Anzahl aller gueltiger und ungueltiger Kombinationen aus
      */
-    public static void ausgabeAnzahlReihenfolgen(){
-        System.out.println("\n\nAnzahl der moeglichen Reihenfolgen: " + anzahlMoeglicherLoesungen);
-        System.out.println("Anzahl der gueltigen Reihenfolgen: " + anzahlGueltigerLoesungen);
-        System.out.println("Anzahl der ungueltigen Reihenfolgen: " + (anzahlMoeglicherLoesungen - anzahlGueltigerLoesungen));
+    public static void ausgabeAnzahlGueltigerUndUngueltigerKombis(){
+        System.out.println("\n\nAnzahl der gueltigen Kombinationen: " + gueltigeSchnittpositionenA.size());
+        System.out.println("Anzahl der ungueltigen Kombinationen: " + ungueltigeKombisA.size());
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Wahrscheinlich nicht mehr gebrauchte Methoden">
+    /**
+     * Befuellt eine Fragmentliste mit Benutzereingaben.
+     *
+     * @param fragmentListe Fragmentliste die befuellt werden soll
+     * @param listenName Name der Fragmentliste
+     */
+    public static void befuelleListenMitBenutzereingaben(List<Integer> fragmentListe, String listenName){
+        System.out.println("\nWie viele Fragmente für Liste " + listenName + "?");
+        int listenLaenge = in.nextInt();
+
+        // Schleife laeuft solange, bsi die Fragmentliste voll ist
+        do{
+            System.out.println("\nGeben Sie die Laenge eines Fragments fuer " + listenName + " ein:");
+            int fragmentLaenge = in.nextInt();
+
+            if(fragmentLaenge <= 0){
+                System.out.println("Versuchen Sie es bitte noch einmal. Nur positive Zahlen sind erlaubt.");
+            }else{
+                System.out.println("Okay.");
+                fragmentListe.add(fragmentLaenge);
+                listenLaenge--;
+            }
+        }while(listenLaenge > 0);
+    }
+
+    /**
+     * Sortiert die Fragmentlisten nach ihrer Befuellung
+     */
+    public static void sortiereFragmentListen(){
+        befuelleListenMitBenutzereingaben(fragmentListeA, "A");
+        befuelleListenMitBenutzereingaben(fragmentListeB, "B");
+        befuelleListenMitBenutzereingaben(fragmentListeAB, "AB");
+
+        Collections.sort(fragmentListeA);
+        Collections.sort(fragmentListeB);
+        Collections.sort(fragmentListeAB);
+    }
+
+    /**
+     * Gibt alle moeglichen Reihenfolgen der Fragmentlaengen einer Liste aus
+     * @param permutationen Liste von allen Permutationen
+     * @param listenName Name der Liste
+     */
+    public static void ausgabeAllerFragmentreihenfolgen(Collection<List<Integer>> permutationen, String listenName){
+        System.out.print("\n\nAnzahl gueltiger Fragment-Reihenfolgen fuer " + listenName + ": " + permutationen.size());
+        int nummerReihenfolge = 1;
+        for(List<Integer> permutation : permutationen){
+            System.out.print("\n" + nummerReihenfolge + ". Fragment-Reihenfolge " + listenName + " = (");
+            for(int fragment : permutation) {
+                System.out.print(fragment + ", ");
+            }
+            System.out.print(").");
+        }
+    }
+
+    /**
+     * Gibt alle gueltige Kombinationen aus
+     */
+    public static void ausgabeGueltigerKombinationen(){
+        System.out.println("+\n\n---------------------------------------------------------------------------------------------------------------+");
+        System.out.println("|                                  Gueltige Reihenfolgen und Schnittpositionen                                  |");
+        System.out.println("+---------------------------------------------------------------------------------------------------------------+\n");
+
+        for(int i = 0; i < gueltigeKombisA.size(); i++){
+            System.out.print("\nReihenfolge A: (");
+            for(int fragment : gueltigeKombisA.get(i)){
+                System.out.print(fragment + ", ");
+            }
+            System.out.print(")");
+
+            System.out.print("\nReihenfolge B: (");
+            for(int fragment : gueltigeKombisB.get(i)){
+                System.out.print(fragment + ", ");
+            }
+            System.out.print(")");
+
+            System.out.print("\nSchnittpositionen A: (");
+            for(int position : gueltigeSchnittpositionenA.get(i)){
+                System.out.print(position + ", ");
+            }
+            System.out.print(")");
+
+            System.out.print("\nSchnittpositionen B: (");
+            for(int position : gueltigeSchnittpositionenB.get(i)){
+                System.out.print(position + ", ");
+            }
+            System.out.print(")");
+
+            System.out.print("\nSchnittpositionen AB: (");
+            for(int position : gueltigeSchnittpositionenAB.get(i)){
+                System.out.print(position + ", ");
+            }
+            System.out.print(")\n\n");
+        }
+    }
+
+    /**
+     * Gibt alle ungueltige Kombinationen aus
+     */
+    public static void ausgabeUngueltigerKombinationen(){
+        System.out.println("+---------------------------------------------------------------------------------------------------------------+");
+        System.out.println("|                                 Ungueltige Reihenfolgen und Schnittpositionen                                 |");
+        System.out.println("+---------------------------------------------------------------------------------------------------------------+");
+
+        for(int i = 0; i < ungueltigeKombisA.size(); i++){
+            System.out.print("\nReihenfolge A: (");
+            for(int fragment : ungueltigeKombisA.get(i)){
+                System.out.print(fragment + ", ");
+            }
+            System.out.print(")");
+
+            System.out.print("\nReihenfolge B: (");
+            for(int fragment : ungueltigeKombisB.get(i)){
+                System.out.print(fragment + ", ");
+            }
+            System.out.print(")");
+
+            System.out.print("\nSchnittpositionen A: (");
+            for(int position : ungueltigeSchnittpositionenA.get(i)){
+                System.out.print(position + ", ");
+            }
+            System.out.print(")");
+
+            System.out.print("\nSchnittpositionen B: (");
+            for(int position : ungueltigeSchnittpositionenB.get(i)){
+                System.out.print(position + ", ");
+            }
+            System.out.print(")");
+
+            System.out.print("\nSchnittpositionen AB: (");
+            for(int position : ungueltigeSchnittpositionenAB.get(i)){
+                System.out.print(position + ", ");
+            }
+            System.out.print(")\n");
+        }
     }
     //</editor-fold>
 }
