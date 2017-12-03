@@ -33,8 +33,7 @@ public class GlobalAlignment extends net.gumbix.dynpro.DynProJava<Integer>{
         System.out.println(ga.mkMatrixString(ga.solution(new Idx(ga.n() - 1, 0))));
     }
 
-    //TODO check why the values for i=0 or j=0 are different to the values below in the comment
-    //gap penalty: -2, should be 0, -2, -4, -8 etc. for i = 0 or j = 0
+    //TODO check why values of diagonal (idx.i() = idx.j()) are wrong
     @Override
     public Object decisions(Idx idx) {
         //Start
@@ -42,13 +41,14 @@ public class GlobalAlignment extends net.gumbix.dynpro.DynProJava<Integer>{
             return new Integer[]{0};
         //Deletion
         }else if(idx.i() == 0 && idx.j() > 0){
-            return new Integer[]{-2*idx.j()};
+            return new Integer[]{-2};
         //Insertion
         }else if(idx.j() == 0 && idx.i() > 0){
-            return new Integer[]{-2*idx.i()};
+            return new Integer[]{-2};
+        //1 Match, -1 Missmatch, -2 Gap
         }else{
-            //TODO Deletion, Insertion, Both.. no idea how to calculate the value here
-            return new Integer[]{0};
+            //TODO Check...
+            return new Integer[]{1,-1,-2};
         }
     }
 
