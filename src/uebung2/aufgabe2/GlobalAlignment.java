@@ -33,48 +33,41 @@ public class GlobalAlignment extends net.gumbix.dynpro.DynProJava<Integer>{
         System.out.println(ga.mkMatrixString(ga.solution(new Idx(ga.n() - 1, 0))));
     }
 
+    //TODO check why the values for i=0 or j=0 are different to the values below in the comment
+    //gap penalty: -2, should be 0, -2, -4, -8 etc. for i = 0 or j = 0
     @Override
     public Object decisions(Idx idx) {
-        if(idx.j() > 0 &&  idx.i() > 0){
-            //TODO ...
-
-            if (s[idx.j()].equals(t[idx.i()])) {
-                return new Integer[]{1};
-            }else{
-                return new Integer[]{-1,-2};
-            }
-
-        }else if(idx.j() <= 0) {
-            return new Integer[]{-2 * idx.i()};
-        }else if(idx.i() <= 0){
-            return new Integer[]{-2 * idx.j()};
-        }else {
+        //Start
+        if(idx.i() == 0 && idx.j() == 0){
+            return new Integer[]{0};
+        //Deletion
+        }else if(idx.i() == 0 && idx.j() > 0){
+            return new Integer[]{-2*idx.j()};
+        //Insertion
+        }else if(idx.j() == 0 && idx.i() > 0){
+            return new Integer[]{-2*idx.i()};
+        }else{
+            //TODO Deletion, Insertion, Both.. no idea how to calculate the value here
             return new Integer[]{0};
         }
     }
 
-    //there are 3 possible previous states from current state: top, left and topleft
+    //should be correct, just like on the slides "BIM-40" page 18
     @Override
     public Idx[] prevStates(Idx idx, Integer d) {
-        if (idx.i() > 0 && idx.j() > 0) {
-            System.out.println(d);
-            Idx top = new Idx(idx.i() - 1, idx.j());
-            Idx left = new Idx(idx.i(), idx.j() - 1);
-            Idx topLeft = new Idx(idx.i() - 1, idx.j() - 1);
-
-            if (d == -2){
-                return new Idx[]{top, left};
-            }else{
-                return new Idx[]{topLeft};
-            }
-        } else {
+        if (idx.i() == 0 && idx.j() > 0) {
+            return new Idx[]{new Idx(idx.i(), idx.j() - 1)};
+        }else if(idx.j() == 0 && idx.i() > 0) {
+            return new Idx[]{new Idx(idx.i() - 1,idx.j())};
+        }else if(idx.j() > 0 && idx.i() > 0) {
+            return new Idx[]{new Idx(idx.i() - 1, idx.j() - 1)};
+        }else{
             return new Idx[]{};
         }
     }
 
     @Override
     public double value(Idx idx, Integer integer) {
-        //TODO ...
         return integer;
     }
 
