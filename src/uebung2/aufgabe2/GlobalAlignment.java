@@ -6,6 +6,7 @@ import net.gumbix.dynpro.PathEntry;
 import scala.Function2;
 import scala.Option;
 import scala.Some;
+import scala.collection.concurrent.Debug;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +31,7 @@ public class GlobalAlignment extends net.gumbix.dynpro.DynProJava<Integer>{
         }
 
         System.out.println("\n");
-        System.out.println(ga.mkMatrixString(ga.solution(new Idx(ga.n() - 1, 0))));
+        System.out.println(ga.mkMatrixString(ga.solution(new Idx(ga.n() - 1, ga.m() -1))));
     }
 
     //TODO check why values of diagonal (idx.i() = idx.j()) are wrong
@@ -38,15 +39,20 @@ public class GlobalAlignment extends net.gumbix.dynpro.DynProJava<Integer>{
     public Object decisions(Idx idx) {
         //Start
         if(idx.i() == 0 && idx.j() == 0){
+            System.out.println(idx.i()+" "+idx.j()+" START");
             return new Integer[]{0};
-        //Deletion
-        }else if(idx.i() == 0 && idx.j() > 0){
-            return new Integer[]{-2};
         //Insertion
+        }else if(idx.i() == 0 && idx.j() > 0){
+
+            System.out.println(idx.i()+" "+idx.j()+" INSERT");
+            return new Integer[]{-2};
+        //Deletion
         }else if(idx.j() == 0 && idx.i() > 0){
+            System.out.println(idx.i()+" "+idx.j()+" DELETION");
             return new Integer[]{-2};
         //1 Match, -1 Missmatch, -2 Gap
         }else{
+            System.out.println(idx.i()+" "+idx.j()+" BOTH");
             //TODO Check...
             return new Integer[]{1,-1,-2};
         }
