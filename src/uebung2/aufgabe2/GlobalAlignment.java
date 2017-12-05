@@ -24,10 +24,11 @@ public class GlobalAlignment extends net.gumbix.dynpro.DynProJava<Integer>{
 
         GlobalAlignment ga = new GlobalAlignment();
 
-        List<PathEntry<Integer>> solutionJava = ga.solutionAsList(new Idx(ga.n() - 1, 0));
+        List<PathEntry<Integer>> solutionJava = ga.solutionAsList(new Idx(ga.n() - 1,ga.m()-1));
         System.out.println("Optimal Decisions:");
         for (PathEntry<Integer> entry : solutionJava) {
             System.out.print(entry.decision() + " ");
+
         }
 
         System.out.println("\n");
@@ -43,7 +44,6 @@ public class GlobalAlignment extends net.gumbix.dynpro.DynProJava<Integer>{
             return new Integer[]{0};
         //Insertion
         }else if(idx.i() == 0 && idx.j() > 0){
-
             System.out.println(idx.i()+" "+idx.j()+" INSERT");
             return new Integer[]{-2};
         //Deletion
@@ -74,7 +74,11 @@ public class GlobalAlignment extends net.gumbix.dynpro.DynProJava<Integer>{
 
     @Override
     public double value(Idx idx, Integer integer) {
-        return integer;
+        if(integer == -2 || integer == 0){
+            return integer;
+        }else{
+            return integer;
+        }
     }
 
     @Override
