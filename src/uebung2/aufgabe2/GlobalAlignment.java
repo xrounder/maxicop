@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by Dennis on 29.11.2017.
  */
-public class GlobalAlignment extends net.gumbix.dynpro.DynProJava<Integer>{
+public class GlobalAlignment extends net.gumbix.dynpro.DynProJava<Integer> {
 
     //Nucleotid Sequences
     private String[] s = (" CGATCCTGT").split("");
@@ -24,7 +24,7 @@ public class GlobalAlignment extends net.gumbix.dynpro.DynProJava<Integer>{
 
         GlobalAlignment ga = new GlobalAlignment();
 
-        List<PathEntry<Integer>> solutionJava = ga.solutionAsList(new Idx(ga.n() - 1,ga.m()-1));
+        List<PathEntry<Integer>> solutionJava = ga.solutionAsList(new Idx(ga.n() - 1, ga.m() - 1));
         System.out.println("Optimal Decisions:");
         for (PathEntry<Integer> entry : solutionJava) {
             System.out.print(entry.decision() + " ");
@@ -32,52 +32,78 @@ public class GlobalAlignment extends net.gumbix.dynpro.DynProJava<Integer>{
         }
 
         System.out.println("\n");
-        System.out.println(ga.mkMatrixString(ga.solution(new Idx(ga.n() - 1, ga.m() -1))));
+        System.out.println(ga.mkMatrixString(ga.solution(new Idx(ga.n() - 1, ga.m() - 1))));
     }
 
     //TODO check why values of diagonal (idx.i() = idx.j()) are wrong
     @Override
     public Object decisions(Idx idx) {
         //Start
-        if(idx.i() == 0 && idx.j() == 0){
-            System.out.println(idx.i()+" "+idx.j()+" START");
+        if (idx.i() == 0 && idx.j() == 0) {
+            System.out.println(idx.i() + " " + idx.j() + " START");
             return new Integer[]{0};
-        //Insertion
-        }else if(idx.i() == 0 && idx.j() > 0){
-            System.out.println(idx.i()+" "+idx.j()+" INSERT");
-            return new Integer[]{-2};
-        //Deletion
-        }else if(idx.j() == 0 && idx.i() > 0){
-            System.out.println(idx.i()+" "+idx.j()+" DELETION");
-            return new Integer[]{-2};
-        //1 Match, -1 Missmatch, -2 Gap
-        }else{
-            System.out.println(idx.i()+" "+idx.j()+" BOTH");
+            //Insertion
+        } else if (idx.i() == 0 && idx.j() > 0) {
+            System.out.println(idx.i() + " " + idx.j() + " INSERT");
+            return new Integer[]{1};
+            //Deletion
+        } else if (idx.j() == 0 && idx.i() > 0) {
+            System.out.println(idx.i() + " " + idx.j() + " DELETION");
+            return new Integer[]{2};
+            //1 Match, -1 Missmatch
+        } else {
+            System.out.println(idx.i() + " " + idx.j() + " INSERT, DELETION, BOTH");
             //TODO Check...
-            return new Integer[]{1,-1,-2};
+            return new Integer[]{1,2,3};
         }
     }
 
     //should be correct, just like on the slides "BIM-40" page 18
     @Override
     public Idx[] prevStates(Idx idx, Integer d) {
-        if (idx.i() == 0 && idx.j() > 0) {
+
+        //1 for Insert
+        if(d == 1){
             return new Idx[]{new Idx(idx.i(), idx.j() - 1)};
-        }else if(idx.j() == 0 && idx.i() > 0) {
-            return new Idx[]{new Idx(idx.i() - 1,idx.j())};
-        }else if(idx.j() > 0 && idx.i() > 0) {
+            //2 for Deletion
+        } else if(d == 2){
+            return new Idx[]{new Idx(idx.i() - 1, idx.j())};
+            //3 for Both
+        } else if (d == 3){
             return new Idx[]{new Idx(idx.i() - 1, idx.j() - 1)};
-        }else{
+            //0 for Start
+        } else {
             return new Idx[]{};
         }
     }
 
     @Override
-    public double value(Idx idx, Integer integer) {
-        if(integer == -2 || integer == 0){
-            return integer;
-        }else{
-            return integer;
+    public double value(Idx idx, Integer d) {
+
+        //Start
+        if (d == 0) {
+            return 0;
+            //Insert or Deletion
+        } else if (d == 1 || d == 2) {
+            return -2;
+            //Both
+        } else {
+            return similarity(s[idx.i()], t[idx.j()]);
+        }
+    }
+
+    /**
+     * checks if sequences at given index is a match or a mismatch
+     *
+     * @param s   sequence s
+     * @param t   sequence t
+     * @return 1 for match, -1 for mismatch
+     */
+    private int similarity(String s, String t) {
+        if (s.equals(t)) {
+            return 1;
+        } else {
+            return -1;
         }
     }
 
@@ -92,7 +118,7 @@ public class GlobalAlignment extends net.gumbix.dynpro.DynProJava<Integer>{
     }
 
     @Override
-    public Function2 extremeFunction(){
+    public Function2 extremeFunction() {
         return this.MAX();
     }
 
