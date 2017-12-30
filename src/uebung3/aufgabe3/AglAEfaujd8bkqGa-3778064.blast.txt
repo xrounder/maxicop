@@ -1,0 +1,114 @@
+BLASTP 2.2.30+
+
+
+Reference: Stephen F. Altschul, Thomas L. Madden, Alejandro A.
+Schaffer, Jinghui Zhang, Zheng Zhang, Webb Miller, and David J.
+Lipman (1997), "Gapped BLAST and PSI-BLAST: a new generation of
+protein database search programs", Nucleic Acids Res. 25:3389-3402.
+
+
+Reference for composition-based statistics: Alejandro A. Schaffer,
+L. Aravind, Thomas L. Madden, Sergei Shavirin, John L. Spouge, Yuri
+I. Wolf, Eugene V. Koonin, and Stephen F. Altschul (2001),
+"Improving the accuracy of PSI-BLAST protein database searches with
+composition-based statistics and other refinements", Nucleic Acids
+Res. 29:2994-3005.
+
+
+
+Database: Homo_sapiens.GRCh38.pep.all.fa
+           104,817 sequences; 39,201,534 total letters
+
+
+
+Query= 
+Length=31
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+  ENSP00000409000.2 pep chromosome:GRCh38:19:39243606:39245006:-1...  60.5    7e-13
+  ENSP00000481633.1 pep chromosome:GRCh38:19:39243553:39245129:-1...  60.5    7e-13
+  ENSP00000333639.4 pep chromosome:GRCh38:19:39268514:39270092:1 ...  55.5    4e-11
+  ENSP00000329991.1 pep chromosome:GRCh38:19:39296325:39298673:1 ...  43.5    1e-06
+
+
+> ENSP00000409000.2 pep chromosome:GRCh38:19:39243606:39245006:-1 
+gene:ENSG00000197110.8 transcript:ENST00000413851.2 gene_biotype:protein_coding 
+transcript_biotype:protein_coding gene_symbol:IFNL3 
+description:interferon lambda 3 [Source:HGNC 
+Symbol;Acc:HGNC:18365]
+Length=196
+
+ Score = 60.5 bits (145),  Expect = 7e-13, Method: Compositional matrix adjust.
+ Identities = 31/31 (100%), Positives = 31/31 (100%), Gaps = 0/31 (0%)
+
+Query  1    VRERPVALEAELALTLKVLEATADTDPALGD  31
+            VRERPVALEAELALTLKVLEATADTDPALGD
+Sbjct  87   VRERPVALEAELALTLKVLEATADTDPALGD  117
+
+
+> ENSP00000481633.1 pep chromosome:GRCh38:19:39243553:39245129:-1 
+gene:ENSG00000197110.8 transcript:ENST00000613087.4 gene_biotype:protein_coding 
+transcript_biotype:protein_coding gene_symbol:IFNL3 
+description:interferon lambda 3 [Source:HGNC 
+Symbol;Acc:HGNC:18365]
+Length=200
+
+ Score = 60.5 bits (145),  Expect = 7e-13, Method: Compositional matrix adjust.
+ Identities = 31/31 (100%), Positives = 31/31 (100%), Gaps = 0/31 (0%)
+
+Query  1    VRERPVALEAELALTLKVLEATADTDPALGD  31
+            VRERPVALEAELALTLKVLEATADTDPALGD
+Sbjct  91   VRERPVALEAELALTLKVLEATADTDPALGD  121
+
+
+> ENSP00000333639.4 pep chromosome:GRCh38:19:39268514:39270092:1 
+gene:ENSG00000183709.7 transcript:ENST00000331982.5 gene_biotype:protein_coding 
+transcript_biotype:protein_coding gene_symbol:IFNL2 
+description:interferon lambda 2 [Source:HGNC Symbol;Acc:HGNC:18364]
+Length=200
+
+ Score = 55.5 bits (132),  Expect = 4e-11, Method: Compositional matrix adjust.
+ Identities = 29/31 (94%), Positives = 30/31 (97%), Gaps = 0/31 (0%)
+
+Query  1    VRERPVALEAELALTLKVLEATADTDPALGD  31
+            VRERP+ALEAELALTLKVLEATADTDPAL D
+Sbjct  91   VRERPMALEAELALTLKVLEATADTDPALVD  121
+
+
+> ENSP00000329991.1 pep chromosome:GRCh38:19:39296325:39298673:1 
+gene:ENSG00000182393.2 transcript:ENST00000333625.2 gene_biotype:protein_coding 
+transcript_biotype:protein_coding gene_symbol:IFNL1 
+description:interferon lambda 1 [Source:HGNC Symbol;Acc:HGNC:18363]
+Length=200
+
+ Score = 43.5 bits (101),  Expect = 1e-06, Method: Compositional matrix adjust.
+ Identities = 26/31 (84%), Positives = 26/31 (84%), Gaps = 2/31 (6%)
+
+Query  1    VRERPVALEAELALTLKVLEATADTDPALGD  31
+            VRERPVALEAELALTLKVLEA A   PAL D
+Sbjct  84   VRERPVALEAELALTLKVLEAAA--GPALED  112
+
+
+
+Lambda      K        H
+   0.311    0.130    0.338 
+
+Gapped
+Lambda      K        H
+   0.267   0.0410    0.140 
+
+Effective search space used: 964315800
+
+
+  Database: Homo_sapiens.GRCh38.pep.all.fa
+    Posted date:  Nov 22, 2017  10:27 AM
+  Number of letters in database: 39,201,534
+  Number of sequences in database:  104,817
+
+
+
+Matrix: BLOSUM62
+Gap Penalties: Existence: 11, Extension: 1
+Neighboring words threshold: 11
+Window for multiple hits: 40

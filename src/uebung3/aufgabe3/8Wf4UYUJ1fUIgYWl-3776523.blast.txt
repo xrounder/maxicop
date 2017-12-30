@@ -1,0 +1,122 @@
+BLASTN 2.2.30+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: Homo_sapiens.GRCh38.dna.toplevel.fa
+           555 sequences; 51,074,893,037 total letters
+
+
+
+Query= 
+Length=300
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+  12 dna:chromosome chromosome:GRCh38:12:1:133275309:1 REF              595   1e-166
+  4 dna:chromosome chromosome:GRCh38:4:1:190214555:1 REF              46.1    0.19  
+  17 dna:chromosome chromosome:GRCh38:17:1:83257441:1 REF             42.1    3.0   
+  13 dna:chromosome chromosome:GRCh38:13:1:114364328:1 REF            42.1    3.0   
+  1 dna:chromosome chromosome:GRCh38:1:1:248956422:1 REF              42.1    3.0   
+
+
+> 12 dna:chromosome chromosome:GRCh38:12:1:133275309:1 REF
+Length=133275309
+
+ Score =   595 bits (300),  Expect = 1e-166
+ Identities = 300/300 (100%), Gaps = 0/300 (0%)
+ Strand=Plus/Plus
+
+Query  1          TGAGCATTTGTAGCAAAATCGCTGGGATCTGGAGAGGAAGACTCAGTCCAGAATCCTCCC  60
+                  ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  100473961  TGAGCATTTGTAGCAAAATCGCTGGGATCTGGAGAGGAAGACTCAGTCCAGAATCCTCCC  100474020
+
+Query  61         AGGGCCTTGAAAGTCCATCTCTGACCCAAAACAATCCAAGTAAGTACCTAATTCCTTTGG  120
+                  ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  100474021  AGGGCCTTGAAAGTCCATCTCTGACCCAAAACAATCCAAGTAAGTACCTAATTCCTTTGG  100474080
+
+Query  121        GAGTGGGTTGTGTATCTCACAGCAACAGAGAAAAAATAGTCACTTAAAAGTTTCTCTTTG  180
+                  ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  100474081  GAGTGGGTTGTGTATCTCACAGCAACAGAGAAAAAATAGTCACTTAAAAGTTTCTCTTTG  100474140
+
+Query  181        ACATCTGTAATGTATGTCAATAAATGAATTCTAAGTTAGTAGAGTTTGATGTAAAGTCCT  240
+                  ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  100474141  ACATCTGTAATGTATGTCAATAAATGAATTCTAAGTTAGTAGAGTTTGATGTAAAGTCCT  100474200
+
+Query  241        GaaaattaaaaaagagagaaactaaaaaacaaaaagaagcagaagcaaaagTTAATGAGT  300
+                  ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  100474201  GAAAATTAAAAAAGAGAGAAACTAAAAAACAAAAAGAAGCAGAAGCAAAAGTTAATGAGT  100474260
+
+
+> 4 dna:chromosome chromosome:GRCh38:4:1:190214555:1 REF
+Length=190214555
+
+ Score = 46.1 bits (23),  Expect = 0.19
+ Identities = 23/23 (100%), Gaps = 0/23 (0%)
+ Strand=Plus/Minus
+
+Query  190        ATGTATGTCAATAAATGAATTCT  212
+                  |||||||||||||||||||||||
+Sbjct  161889042  ATGTATGTCAATAAATGAATTCT  161889020
+
+
+> 17 dna:chromosome chromosome:GRCh38:17:1:83257441:1 REF
+Length=83257441
+
+ Score = 42.1 bits (21),  Expect = 3.0
+ Identities = 24/25 (96%), Gaps = 0/25 (0%)
+ Strand=Plus/Minus
+
+Query  223       AGTTTGATGTAAAGTCCTGaaaatt  247
+                 ||||||||||||| |||||||||||
+Sbjct  53165492  AGTTTGATGTAAACTCCTGAAAATT  53165468
+
+
+> 13 dna:chromosome chromosome:GRCh38:13:1:114364328:1 REF
+Length=114364328
+
+ Score = 42.1 bits (21),  Expect = 3.0
+ Identities = 24/25 (96%), Gaps = 0/25 (0%)
+ Strand=Plus/Plus
+
+Query  227       TGATGTAAAGTCCTGaaaattaaaa  251
+                 |||||||||||||||||| ||||||
+Sbjct  20648037  TGATGTAAAGTCCTGAAATTTAAAA  20648061
+
+
+> 1 dna:chromosome chromosome:GRCh38:1:1:248956422:1 REF
+Length=248956422
+
+ Score = 42.1 bits (21),  Expect = 3.0
+ Identities = 24/25 (96%), Gaps = 0/25 (0%)
+ Strand=Plus/Plus
+
+Query  204       ATGAATTCTAAGTTAGTAGAGTTTG  228
+                 ||||||||||| |||||||||||||
+Sbjct  64175798  ATGAATTCTAAATTAGTAGAGTTTG  64175822
+
+
+
+Lambda      K        H
+    1.37    0.711     1.31 
+
+Gapped
+Lambda      K        H
+    1.37    0.711     1.31 
+
+Effective search space used: 14198816869906
+
+
+  Database: Homo_sapiens.GRCh38.dna.toplevel.fa
+    Posted date:  Jul 21, 2017  8:06 PM
+  Number of letters in database: 51,074,893,037
+  Number of sequences in database:  555
+
+
+
+Matrix: blastn matrix 1 -3
+Gap Penalties: Existence: 4, Extension: 4
